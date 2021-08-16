@@ -1,12 +1,21 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
-import { Container, Row, Button, Col, Table } from 'react-bootstrap';
+import { Container, Row, Button, Col, Table, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { URLS } from '../routes';
 import displayToast from '../utils/displayToast';
 
 function ManageBuyer() {
     const [buyers, setBuyers] = useState([]);
+    const [currentBuyer, setCurrentBuyer] = useState(null);
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => {
+        setShow(false);
+        setCurrentBuyer(null);
+    }
+
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
         let isActive = true;
@@ -21,12 +30,33 @@ function ManageBuyer() {
 
     const fetchBuyers = async () => {
         const url = URLS.GET_ALL_BUYERS;
-        debugger;
         axios.get(url)
               .then(function (response) {
-                  debugger;
-                console.log(response);
+                // console.log(response);
                 setBuyers(response.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+                displayToast({type : "error", msg : "Oops! Something went wrong"});
+              });
+    }
+
+    const deleteBuyerConfirmation = (b) =>{
+        setCurrentBuyer(b);
+        handleShow();
+    }
+
+    const deleteBuyer = async () => {
+        const url = URLS.DELETE_BUYER + currentBuyer.id;
+        // const data = {
+        //     id : currentBuyer.id
+        // };
+        axios.delete(url)
+              .then(function (response) {
+                handleClose();
+                // console.log(response);
+                displayToast({type : "success", msg : "Buyer deleted successfully!"});
+                fetchBuyers();
               })
               .catch(function (error) {
                 console.log(error);
@@ -67,7 +97,7 @@ function ManageBuyer() {
                         <td>{zipcode}</td>
                         <td>
                             <Link to={`/edit-buyer/?id=${id}`}><Button variant="primary">Edit</Button>{' '}</Link>
-                            <Button variant="danger">Delete</Button>
+                            <Button onClick={()=>deleteBuyerConfirmation(buyer)} variant="danger">Delete</Button>
                         </td>
                     </tr>);
                 })}
@@ -75,6 +105,21 @@ function ManageBuyer() {
                 </tbody>
             </Table>
           </Row>
+
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+            <Modal.Title>Delete Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete {currentBuyer ? currentBuyer.ownerName : ""}</Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+                Close
+            </Button>
+            <Button variant="danger" onClick={deleteBuyer}>
+                Delete
+            </Button>
+            </Modal.Footer>
+        </Modal>
         </Container>
     )
 }
