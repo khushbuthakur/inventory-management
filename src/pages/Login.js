@@ -1,6 +1,10 @@
 import React, {useReducer} from 'react'
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 import '../styles/Login.scss';
+import displayToast from '../utils/displayToast';
+import { validateInputField } from '../utils/validations';
+import axios from 'axios';
+import { URLS } from '../routes';
 
 const initialState = {
     userName: '',
@@ -45,16 +49,34 @@ function Login() {
 
     const{userName, password} = state;
 
-    const submitForm = () =>{
-        if (userName.length > 0 && password.length > 0) {
-            console.log('Login Successful!');
+    const submitForm = (e) =>{
+        e.preventDefault();
+        
+        if (validateInputField({field : userName, fieldName : "user name"}) && 
+            validateInputField({field : password, fieldName : "password"})) {
+            const body = {userName, password};
+
+            axios.post(URLS.VERIFY_USER, body)
+              .then(function (response) {
+                console.log(response);
+                displayToast({type : "success", msg : "Login Successful!"});
+              })
+              .catch(function (error) {
+                console.log(error);
+                displayToast({type : "success", msg : "Login Successful!"});
+              });
+
+        }else{
+           // displayToast({type : "error", msg : "Login Failed!"});
         }
     }    
 
     return (
-        <Container className="login-bg">
-            <Row>
+        <div className="login-bg">
+            <Row className="login--row">
                 <Col md={{span : 8, offset : 2}}>
+                    <h3>Login</h3>
+                    <br/>
                     <Form onSubmit={submitForm}>
                         <Form.Group className="mb-3" controlId="formBasicUserName">
                             <Form.Label>User Name</Form.Label>
@@ -79,7 +101,7 @@ function Login() {
                     </Form>
                 </Col>
             </Row>
-        </Container>
+        </div>
     );
 }
 

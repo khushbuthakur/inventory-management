@@ -1,11 +1,12 @@
-import Login from './pages/Login';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthProvider } from './context/Auth';
+
+import Nav from './navigation/Nav';
 
 function App() {
   return (
-    <div>
-      <Login/>
-    </div>
+    <AuthProvider>
+      <Nav/>
+    </AuthProvider>
   );
 }
 
