@@ -2,17 +2,17 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 import { Container, Row, Button, Col, Table, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { URLS } from '../routes';
-import displayToast from '../utils/displayToast';
+import { URLS } from '../../routes';
+import displayToast from '../../utils/displayToast';
 
-function ManageBuyer() {
-    const [buyers, setBuyers] = useState([]);
-    const [currentBuyer, setCurrentBuyer] = useState(null);
+function ManageEmployee() {
+    const [employees, setEmployees] = useState([]);
+    const [currentEmployee, setCurrentEmployee] = useState(null);
 
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setShow(false);
-        setCurrentBuyer(null);
+        setCurrentEmployee(null);
     }
 
     const handleShow = () => setShow(true);
@@ -21,19 +21,19 @@ function ManageBuyer() {
         let isActive = true;
 
         if(isActive){
-            fetchBuyers();
+            fetchEmployees();
         }
         return () => {
             isActive = false;
         }
     }, []);
 
-    const fetchBuyers = async () => {
-        const url = URLS.GET_ALL_BUYERS;
+    const fetchEmployees = async () => {
+        const url = URLS.GET_ALL_EMPLOYEES;
         axios.get(url)
               .then(function (response) {
                 // console.log(response);
-                setBuyers(response.data);
+                setEmployees(response.data);
               })
               .catch(function (error) {
                 console.log(error);
@@ -41,13 +41,13 @@ function ManageBuyer() {
               });
     }
 
-    const deleteBuyerConfirmation = (b) =>{
-        setCurrentBuyer(b);
+    const deleteEmployeeConfirmation = (b) =>{
+        setCurrentEmployee(b);
         handleShow();
     }
 
     const deleteBuyer = async () => {
-        const url = URLS.DELETE_BUYER + currentBuyer.id;
+        const url = URLS.DELETE_EMPLOYEE + currentEmployee.id;
         // const data = {
         //     id : currentBuyer.id
         // };
@@ -55,8 +55,8 @@ function ManageBuyer() {
               .then(function (response) {
                 handleClose();
                 // console.log(response);
-                displayToast({type : "success", msg : "Buyer deleted successfully!"});
-                fetchBuyers();
+                displayToast({type : "success", msg : "Employee deleted successfully!"});
+                fetchEmployees();
               })
               .catch(function (error) {
                 console.log(error);
@@ -68,40 +68,45 @@ function ManageBuyer() {
         <Container className="container-main">  
             <Row className="container-main">
                 <Col>
-                    <Link to="/add-buyer">
-                        <Button variant="primary">Add New Buyer</Button>
+                    <Link to="/add-employee">
+                        <Button variant="primary">Add New Employee</Button>
                     </Link>
                 </Col>
-                <Col><h3>Buyer</h3></Col>
+                <Col><h3>Employee</h3></Col>
             </Row>      
          <Row>
             <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>Sr. No.</th>
-                        <th>Owner Name</th>
-                        <th>Company Name</th>
-                        <th>Zipcode</th>
+                        <th>Full Name</th>
+                        <th>Designation</th>
+                        <th>User Name</th>
+                        <th>Salary</th>
+                        <th>DOB</th>
+                        <th>Rating</th>
                         <th>Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                {buyers.map((buyer, index) => {
-                    const {id, ownerName, companyName, zipcode} = buyer;
+                {employees.map((employee, index) => {
+                    const {id, fullName, username, salary, dob, rating, designation} = employee;
 
                     return (<tr key={id}>
                         <td>{index+1}</td>
-                        <td>{ownerName}</td>
-                        <td>{companyName}</td>
-                        <td>{zipcode}</td>
+                        <td>{fullName}</td>
+                        <td>{designation}</td>
+                        <td>{username}</td>
+                        <td>{salary}</td>
+                        <td>{dob}</td>
+                        <td>{rating}</td>
                         <td>
-                            <Link to={`/edit-buyer/?id=${id}`}><Button variant="primary">Edit</Button>{' '}</Link>
-                            <Button onClick={()=>deleteBuyerConfirmation(buyer)} variant="danger">Delete</Button>
+                            <Link to={`/edit-employee/?id=${id}`}><Button variant="primary">Edit</Button>{' '}</Link>
+                            <Button onClick={()=>deleteEmployeeConfirmation(employee)} variant="danger">Delete</Button>
                         </td>
                     </tr>);
                 })}
-                    
                 </tbody>
             </Table>
           </Row>
@@ -110,7 +115,7 @@ function ManageBuyer() {
             <Modal.Header closeButton>
             <Modal.Title>Delete Confirmation</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Are you sure you want to delete {currentBuyer ? currentBuyer.ownerName : ""}</Modal.Body>
+            <Modal.Body>Are you sure you want to delete {currentEmployee ? currentEmployee.fullName : ""}</Modal.Body>
             <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
                 Close
@@ -124,4 +129,4 @@ function ManageBuyer() {
     )
 }
 
-export default ManageBuyer;
+export default ManageEmployee;

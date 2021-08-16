@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, {useReducer, useState, useEffect} from 'react';
 import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
-import { URLS } from '../routes';
-import displayToast from '../utils/displayToast';
-import { validateInputField } from '../utils/validations';
+import { URLS } from '../../routes';
+import displayToast from '../../utils/displayToast';
+import { validateInputField } from '../../utils/validations';
 import { useHistory, useLocation } from 'react-router';
 
 const initialState = {

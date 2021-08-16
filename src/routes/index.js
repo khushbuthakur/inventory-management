@@ -10,4 +10,10 @@ export const URLS = {
     ADD_BUYER: '/api/buyer/save',
     EDIT_BUYER: '/api/buyer/update',
     DELETE_BUYER: '/api/buyer/delete/',
+
+    GET_ALL_EMPLOYEES: '/api/employee/getAll',
+    GET_EMPLOYEE_DETAILS: '/api/employee/getEmployee',
+    ADD_EMPLOYEE: '/api/employee/save',
+    EDIT_EMPLOYEE: '/api/employee/update',
+    DELETE_EMPLOYEE: '/api/employee/delete/',
 }

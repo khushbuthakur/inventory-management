@@ -36,6 +36,15 @@ function Sidenav() {
                         </NavText>
                     </NavItem>
 
+                    <NavItem eventKey="manage-employees">
+                        <NavIcon>
+                            <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                        </NavIcon>
+                        <NavText>
+                            Employees
+                        </NavText>
+                    </NavItem>
+
                     <NavItem eventKey="manage-buyers">
                         <NavIcon>
                             <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
