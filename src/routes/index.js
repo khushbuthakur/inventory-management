@@ -4,6 +4,7 @@ export const URLS = {
     ADD_PRODUCT: '/api/product/save',
     EDIT_PRODUCT: '/api/product/update',
     DELETE_PRODUCT: '/api/product/delete/',
+    GET_PRODUCT_DETAILS: '/api/product/getProduct',
 
     GET_ALL_BUYERS: '/api/buyer/getAll',
     GET_BUYER_DETAILS: '/api/buyer/getBuyer',
