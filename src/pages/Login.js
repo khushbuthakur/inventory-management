@@ -5,6 +5,7 @@ import displayToast from '../utils/displayToast';
 import { validateInputField } from '../utils/validations';
 import axios from 'axios';
 import { URLS } from '../routes';
+import { useHistory } from 'react-router';
 
 const initialState = {
     userName: '',
@@ -24,6 +25,9 @@ const reducer = (state, action) => {
                 ...initialState,
                 password: action.password
             };
+
+        case 'RESET':
+            return initialState;
         default:
             return state;
     }
@@ -32,6 +36,7 @@ const reducer = (state, action) => {
 function Login() {
 
     const [state, dispatch] = useReducer(reducer, initialState);
+    const history = useHistory();
 
     const handleUserNameChange = (event) => {
         dispatch({
@@ -59,17 +64,28 @@ function Login() {
             axios.post(URLS.VERIFY_USER, body)
               .then(function (response) {
                 console.log(response);
+                resetForm();
                 displayToast({type : "success", msg : "Login Successful!"});
+
+                setTimeout(() => {
+                    history.push("/manage-buyers");
+                  }, 1000);
               })
               .catch(function (error) {
                 console.log(error);
-                displayToast({type : "success", msg : "Login Successful!"});
+                displayToast({type : "error", msg : "Oops! Something went wrong"});
               });
 
         }else{
            // displayToast({type : "error", msg : "Login Failed!"});
         }
     }    
+
+    const resetForm = () => {
+        dispatch({
+            type : 'RESET'
+        });
+    }
 
     return (
         <div className="login-bg">

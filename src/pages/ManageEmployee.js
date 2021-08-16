@@ -1,17 +1,15 @@
 import React from 'react'
 import { Container, Row, Button, Col, Table } from 'react-bootstrap';
 
-function ProductList() {
+function ManageEmployee() {
     return (
-        <Container className="container-main">
-            
+        <Container className="container-main">  
             <Row className="container-main">
                 <Col>
-                    <Button variant="primary">Add New Product</Button>
+                    <Button variant="primary">Add New Employee</Button>
                 </Col>
-                <Col><h3>Products</h3></Col>
-            </Row>
-            
+                <Col><h3>Employee</h3></Col>
+            </Row>      
          <Row>
             <Table striped bordered hover>
                 <thead>
@@ -40,4 +38,4 @@ function ProductList() {
     )
 }
 
-export default ProductList;
+export default ManageEmployee;
