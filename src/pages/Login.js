@@ -62,7 +62,7 @@ function Login() {
         
         if (validateInputField({field : userName, fieldName : "user name"}) && 
             validateInputField({field : password, fieldName : "password"})) {
-            const body = {userName, password};
+            const body = {username : userName, password};
 
             axios.post(URLS.VERIFY_USER, body)
               .then(function (response) {
@@ -72,9 +72,9 @@ function Login() {
                 resetForm();
                 displayToast({type : "success", msg : "Login Successful!"});
 
-                setTimeout(() => {
-                    history.push("/manage-buyers");
-                  }, 1000);
+                // setTimeout(() => {
+                //     history.push("/manage-buyers");
+                //   }, 1000);
               })
               .catch(function (error) {
                 console.log(error);

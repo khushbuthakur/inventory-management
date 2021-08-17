@@ -3,17 +3,45 @@ import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/rea
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import { useHistory, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/Auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee, faHome, faThermometer, faUser, faUserTie, faFileInvoiceDollar, faUserTag } from '@fortawesome/free-solid-svg-icons';
+import displayToast from '../../utils/displayToast';
+import {Button, Navbar, Container, } from 'react-bootstrap';
 
 function Sidenav() {
     const history = useHistory();
     const location = useLocation();
-    const {isLoggedIn } = useContext(AuthContext);
+    const {isLoggedIn, setUserData, userData } = useContext(AuthContext);
+
+    const logoutUser = () => {
+        debugger;
+        displayToast("Logged out successfully!", "success");
+    
+        setTimeout(() => {
+          setUserData(null);
+          history.push("/");
+        }, 1000);
+      }
 
     if(!isLoggedIn){
         return null;
     }else{
      return (
         <React.Fragment>
+        <Navbar bg="light" expand="lg">
+            <Container>
+                <Navbar.Brand href="/">Inventory Management</Navbar.Brand>   
+                <Navbar.Collapse className="justify-content-end">
+                    <Navbar.Text>
+                        <FontAwesomeIcon icon={faUserTie} className="side-nav-icons"/>  {userData.fullName} - <b>{userData.designation}</b>
+                    </Navbar.Text>
+                </Navbar.Collapse>  
+
+                <Navbar.Collapse className="justify-content-end">
+                    <Button variant="outline-dark" className="" onClick={logoutUser}>Logout</Button>
+                </Navbar.Collapse>   
+            </Container>
+            </Navbar>
             <SideNav
                 onSelect={(selected) => {
                     const to = '/' + selected;
@@ -26,7 +54,8 @@ function Sidenav() {
                 <SideNav.Nav defaultSelected="home">
                     <NavItem eventKey="/">
                         <NavIcon>
-                            <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
+                        <FontAwesomeIcon icon={faHome} className="side-nav-icons"/>
+                            {/* <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} /> */}
                         </NavIcon>
                         <NavText>
                             Home
@@ -34,7 +63,8 @@ function Sidenav() {
                     </NavItem>
                     <NavItem eventKey="manage-products">
                         <NavIcon>
-                            <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                        <FontAwesomeIcon icon={faCoffee} className="side-nav-icons"/>
+                            {/* <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} /> */}
                         </NavIcon>
                         <NavText>
                             Products
@@ -43,7 +73,8 @@ function Sidenav() {
 
                     <NavItem eventKey="manage-employees">
                         <NavIcon>
-                            <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                        <FontAwesomeIcon icon={faUserTie} className="side-nav-icons"/>
+                            {/* <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} /> */}
                         </NavIcon>
                         <NavText>
                             Employees
@@ -52,7 +83,8 @@ function Sidenav() {
 
                     <NavItem eventKey="manage-buyers">
                         <NavIcon>
-                            <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                        <FontAwesomeIcon icon={faUserTag} className="side-nav-icons"/>
+                            {/* <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} /> */}
                         </NavIcon>
                         <NavText>
                             Buyers
@@ -61,12 +93,14 @@ function Sidenav() {
 
                     <NavItem eventKey="manage-purchase-order">
                         <NavIcon>
-                            <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                        <FontAwesomeIcon icon={faFileInvoiceDollar} className="side-nav-icons"/>
+                            {/* <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} /> */}
                         </NavIcon>
                         <NavText>
                             Purchase Orders
                         </NavText>
                     </NavItem>
+
                 </SideNav.Nav>
             </SideNav>
             </React.Fragment>

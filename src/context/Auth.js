@@ -8,8 +8,9 @@ export const AuthProvider = (props) => {
   const [userData, setUserData] = useLocalStorageState('userData', null);
 
   let isLoggedIn = false;
-
-  if (userData && (userData.user || userData.token) && (!userData.expires || new Date() < new Date(userData.expires))) {
+  
+  if(userData && userData.id) {
+  // if (userData && (userData.id || userData.token) && (!userData.expires || new Date() < new Date(userData.expires))) {
     isLoggedIn = true;
   }
   return (<AuthContext.Provider value={{ userData, setUserData, isLoggedIn }} {...props} />)

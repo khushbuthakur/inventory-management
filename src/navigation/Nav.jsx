@@ -14,6 +14,7 @@ import ManageEmployee from '../pages/Employee/ManageEmployee';
 import AddEmployee from '../pages/Employee/AddEmployee';
 import ManagePurchaseOrder from '../pages/PurchaseOrder/ManagePurchaseOrder';
 import AddPurchaseOrder from '../pages/PurchaseOrder/AddPurchaseOrder';
+import Home from '../pages/Home';
 
 function RouteWrapper({
   component: Component,
@@ -53,25 +54,30 @@ function Nav() {
   return (
     <BrowserRouter baseName="/">
       <Switch>
-        {isLoggedIn && <RouteWrapper path="/profile/" component={Profile} />}
-        <RouteWrapper path="/" exact component={Login} />
+        {isLoggedIn ? (
+          <React.Fragment>
+            <RouteWrapper path="/manage-products" exact component={ManageProduct} />
+            <RouteWrapper path="/add-product" exact component={AddProduct} />
+            <RouteWrapper path="/edit-product" exact component={AddProduct} />
 
-        <RouteWrapper path="/manage-products" exact component={ManageProduct} />
-        <RouteWrapper path="/add-product" exact component={AddProduct} />
-        <RouteWrapper path="/edit-product" exact component={AddProduct} />
+            <RouteWrapper path="/manage-buyers" exact component={ManageBuyer} />
+            <RouteWrapper path="/add-buyer" exact component={AddBuyer} />
+            <RouteWrapper path="/edit-buyer/" exact component={AddBuyer} />
 
-        <RouteWrapper path="/manage-buyers" exact component={ManageBuyer} />
-        <RouteWrapper path="/add-buyer" exact component={AddBuyer} />
-        <RouteWrapper path="/edit-buyer/" exact component={AddBuyer} />
+            <RouteWrapper path="/manage-employees" exact component={ManageEmployee} />
+            <RouteWrapper path="/add-employee" exact component={AddEmployee} />
+            <RouteWrapper path="/edit-employee/" exact component={AddEmployee} />
 
-        <RouteWrapper path="/manage-employees" exact component={ManageEmployee} />
-        <RouteWrapper path="/add-employee" exact component={AddEmployee} />
-        <RouteWrapper path="/edit-employee/" exact component={AddEmployee} />
+            <RouteWrapper path="/manage-purchase-order" exact component={ManagePurchaseOrder} />
+            <RouteWrapper path="/add-purchase-order" exact component={AddPurchaseOrder} />
+            <RouteWrapper path="/edit-purchase-order/" exact component={AddPurchaseOrder} />
 
-        <RouteWrapper path="/manage-purchase-order" exact component={ManagePurchaseOrder} />
-        <RouteWrapper path="/add-purchase-order" exact component={AddPurchaseOrder} />
-        <RouteWrapper path="/edit-purchase-order/" exact component={AddPurchaseOrder} />
-
+            <RouteWrapper path="/" exact component={Home} />
+          </React.Fragment>
+        ) : (
+          <RouteWrapper path="/" exact component={Login} />
+        )}
+        
         <Route exact path="/">
           <Redirect to="/" />
         </Route>
