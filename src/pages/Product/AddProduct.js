@@ -129,7 +129,7 @@ function AddProduct() {
         if (validateInputField({field : productName, fieldName : "product name"}) && 
             validateInputField({field : quantity, fieldName : "quantity"}) &&
             validateInputField({field : price, fieldName : "price"})) {
-            const body = {productName, quantity, price};
+            const body = {productName, quantity, price, purchaseOrder : []};
             const url = isUpdate ? URLS.EDIT_PRODUCT : URLS.ADD_PRODUCT;
             
             if(isUpdate){

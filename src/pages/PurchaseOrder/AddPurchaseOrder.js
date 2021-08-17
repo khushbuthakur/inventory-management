@@ -4,12 +4,14 @@ import { Container, Row, Col, Form, Card, Button, FloatingLabel, Table } from 'r
 import { URLS } from '../../routes';
 import displayToast from '../../utils/displayToast';
 import { validateInputField } from '../../utils/validations';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import dayjs from 'dayjs';
 import { useHistory, useLocation } from 'react-router';
 
 const initialState = {
     selectedProducts : [],
-    paymentDate: '',
-    price : 0,
+    paymentDate: new Date(),
     id : -1,
     buyerId : null,
 };
@@ -26,7 +28,25 @@ const reducer = (state, action) =>{
             return {
                 ...state,
                 selectedProducts : state.selectedProducts.filter(p => p.id !== action.product.id)
-            }    
+            }  
+            
+        case 'UPDATE_BUYER':
+            return {
+                ...state,
+                buyerId : action.buyerId
+            }
+            
+        case 'UPDATE_PAYMENT_DATE':
+            return {
+                ...state,
+                paymentDate : action.paymentDate
+            }
+            
+        case 'UPDATE_QUANTITY':
+            return{
+                ...state,
+                selectedProducts : action.productList
+            }  
 
         case 'RESET':
             return initialState;    
@@ -42,10 +62,13 @@ function AddPurchaseOrder() {
     const [currentProduct, setCurrentProduct] = useState(null);
 
     const [buyers, setBuyers] = useState([]);
-    const [currentBuyer, setCurrentBuyer] = useState(null);
     
     const [state, dispatch] = useReducer(reducer, initialState);
-    const {selectedProducts} = state;
+    const {selectedProducts, paymentDate, buyerId} = state;
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const history = useHistory();
 
     const fetchProducts = async () => {
         const url = URLS.GET_ALL_PRODUCTS;
@@ -66,6 +89,7 @@ function AddPurchaseOrder() {
               .then(function (response) {
                 // console.log(response);
                 setBuyers(response.data);
+                setIsLoading(false);
               })
               .catch(function (error) {
                 console.log(error);
@@ -85,12 +109,12 @@ function AddPurchaseOrder() {
         }
     }, []);
     
-
     const handleProductChangne = (e) =>{
         setCurrentProduct(e.target.value);
     }
 
     const addProduct = (e) =>{
+        setIsLoading(true);
         e.preventDefault();
         if(currentProduct){
             if(selectedProducts.findIndex(p => p.id == currentProduct) === -1){
@@ -102,16 +126,17 @@ function AddPurchaseOrder() {
         }else{
             displayToast({type : "error", msg : "Please select a product!"});
         }
+
+        setIsLoading(false);
     }
 
-    const deleteProduct = (p) =>{
-        dispatch({type: 'DELETE_PRODUCT', p});
+    const deleteProduct = (product) =>{
+        dispatch({type: 'DELETE_PRODUCT', product});
     }
 
     const handleQuantityChange = (e, product) =>{
         const quantity = e.target.value;
         const productList = selectedProducts.map(i => {
-
             if(i.id == product.id){
                 return {...i, selectedQuantity : quantity};
             }
@@ -121,7 +146,85 @@ function AddPurchaseOrder() {
     }
 
     const handleBuyerChangne = (e) =>{
-        setCurrentBuyer(e.target.value);
+        dispatch({type: 'UPDATE_BUYER', buyerId : e.target.value});
+    }
+
+    const handleDateChange = (date) =>{
+        dispatch({type: 'UPDATE_PAYMENT_DATE', paymentDate : date});
+    }
+
+    const submitPo = (e) =>{
+        e.preventDefault();
+        setIsLoading(true);
+        
+        if(validateInputField({field : buyerId, fieldName : "buyer name"}) && validateInputField({field : paymentDate, fieldName : "payment date"})){
+            if(selectedProducts.length > 0){
+                let isValid = true;
+                for(let i = 0; i < selectedProducts.length; i++){
+                    const {selectedQuantity} = selectedProducts[i];
+                    if(!selectedQuantity){
+                        isValid = false;
+                        displayToast({type : "error", msg : "Please select a quantity for each product!"});
+                        return false;
+                    }
+                    const date = dayjs(paymentDate).format('MM-DD-YYYY');
+
+                    if(isValid){
+                        const buyer = buyers.find(b => b.id == state.buyerId);
+
+                        const userProducts = selectedProducts.map(item =>{
+                            return({
+                                product : item,
+                                quantity : parseInt(item.selectedQuantity)
+                            })
+                        });
+
+                        const body = {
+                            buyer,
+                            paymentDate : date,
+                            products : userProducts,
+                            totalAmount : 0.0,
+                            paid : false
+                        };
+
+                        submitPoAPi(body);
+                    }
+                }
+            }else{
+                displayToast({type : "error", msg : "Please select a product!"});
+            }
+        }else{
+            setIsLoading(false);
+        }
+    }
+
+    const submitPoAPi = async (body) =>{
+        const url = URLS.ADD_PURCHASE_ORDERS;
+        console.log(body);
+        axios.post(url, body)
+              .then(function (response) {
+                const {status} = response;
+                if(status === 200){
+                    resetForm();
+                    displayToast({type : "success", msg : `Purchase Order added successfully!`});
+                    setIsLoading(false);
+                    setTimeout(() => {
+                        history.push("/manage-purchase-order");
+                    }, 1000);
+                }else{
+                    displayToast({type : "error", msg : "Oops! Something went wrong."});
+                    setIsLoading(false);
+                }
+              })
+              .catch(function (error) {
+                setIsLoading(false);
+                console.log(error);
+                displayToast({type : "error", msg : error.msg});
+              });
+    }
+
+    const resetForm = () =>{
+        dispatch({type: 'RESET'});
     }
 
     return (
@@ -142,13 +245,19 @@ function AddPurchaseOrder() {
                             <Row>
                                 <Col lg={6}>
                                         <FloatingLabel controlId="floatingSelect" label="Seelct Buyer">
-                                                <Form.Select aria-label="Buyer List" onChange={handleBuyerChangne}>
+                                                <Form.Select aria-label="Buyer List" onChange={handleBuyerChangne} value={buyerId}>
                                                 <option value="" selected disabled>Select a Buyer</option>
                                                     {buyers.map(b =>{
                                                         return <option key={b.id} value={b.id}>{b.companyName} - {b.ownerName}</option>
                                                     })}
                                                 </Form.Select>
                                             </FloatingLabel>
+                                </Col>
+                                <Col lg={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicQuantity">
+                                        <Form.Label>Payment Date</Form.Label>
+                                        <DatePicker selected={paymentDate} onChange={(date) => handleDateChange(date)} />
+                                    </Form.Group>
                                 </Col>
                             </Row>
                             <br/>
@@ -210,8 +319,17 @@ function AddPurchaseOrder() {
                                 })}             
                                 </tbody>
                         </Table>
+
                     </Card.Body>
                 </Card>
+                <br/>  
+                <Row>
+                    <Col md={{span : 6, offset : 5}}>
+                    <Form onSubmit={submitPo}>
+                        <Button variant="primary" className="center-align" type="submit" onclick={submitPo}>Save</Button>
+                    </Form>
+                    </Col>
+                </Row> 
             </Col>
                 </Row>
             </Container>

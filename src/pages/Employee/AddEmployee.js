@@ -112,8 +112,6 @@ function AddEmployee() {
         axios.get(url)
               .then(function (response) {
                 setIsLoading(false);
-                // console.log({response});
-                // debugger;
                 dispatch({type: 'UPDATE_ALL_FIELDS', state: response.data});
               })
               .catch(function (error) {
