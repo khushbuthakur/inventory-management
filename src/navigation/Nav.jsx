@@ -15,6 +15,7 @@ import AddEmployee from '../pages/Employee/AddEmployee';
 import ManagePurchaseOrder from '../pages/PurchaseOrder/ManagePurchaseOrder';
 import AddPurchaseOrder from '../pages/PurchaseOrder/AddPurchaseOrder';
 import Home from '../pages/Home';
+import ManageInvoice from '../pages/Invoice/ManageInvoice';
 
 function RouteWrapper({
   component: Component,
@@ -76,6 +77,8 @@ function Nav() {
             <RouteWrapper path="/add-purchase-order" exact component={AddPurchaseOrder} />
             <RouteWrapper path="/edit-purchase-order/" exact component={AddPurchaseOrder} />
             
+            <RouteWrapper path="/manage-invoice" exact component={ManageInvoice} />
+
             <RouteWrapper path="/home" exact component={Home} />
             <RouteWrapper path="/" exact component={Home} />
             

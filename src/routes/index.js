@@ -23,4 +23,7 @@ export const URLS = {
     ADD_PURCHASE_ORDERS: '/api/purchaseOrder/save',
     EDIT_PURCHASE_ORDERS: '/api/purchaseOrder/update',
     DELETE_PURCHASE_ORDER: '/api/purchaseOrder/delete/',
+
+    GET_ALL_INVOICE: '/api/invoice/getAll',
+    GENERATE_INVOICE : '/api/invoice/generateInvoice/'
 }

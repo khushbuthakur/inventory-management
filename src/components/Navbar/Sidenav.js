@@ -4,7 +4,7 @@ import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import { useHistory, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/Auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee, faHome, faThermometer, faUser, faUserTie, faFileInvoiceDollar, faUserTag } from '@fortawesome/free-solid-svg-icons';
+import { faCoffee, faHome, faThermometer, faUser, faUserTie, faFileInvoiceDollar, faUserTag, faReceipt } from '@fortawesome/free-solid-svg-icons';
 import displayToast from '../../utils/displayToast';
 import {Button, Navbar, Container, } from 'react-bootstrap';
 
@@ -99,6 +99,16 @@ function Sidenav() {
                         </NavIcon>
                         <NavText>
                             Purchase Orders
+                        </NavText>
+                    </NavItem>
+
+                    <NavItem eventKey="manage-invoice">
+                        <NavIcon>
+                        <FontAwesomeIcon icon={faReceipt} className="side-nav-icons"/>
+                            {/* <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} /> */}
+                        </NavIcon>
+                        <NavText>
+                            Invoice
                         </NavText>
                     </NavItem>
 

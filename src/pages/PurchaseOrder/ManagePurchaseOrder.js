@@ -8,6 +8,7 @@ import displayToast from '../../utils/displayToast';
 function ManagePurchaseOrder() {
     const [pos, setPos] = useState([]);
     const [currentPo, setCurrentPo] = useState(null);
+    const [currentPo1, setCurrentPo1] = useState(null);
 
     const [show, setShow] = useState(false);
     const handleClose = () => {
@@ -15,7 +16,14 @@ function ManagePurchaseOrder() {
         setCurrentPo(null);
     }
 
+    const [show1, setShow1] = useState(false);
+    const handleClose1 = () => {
+        setShow1(false);
+        setCurrentPo1(null);
+    }
+
     const handleShow = () => setShow(true);
+    const handleShow1 = () => setShow1(true);
 
     useEffect(() => {
         let isActive = true;
@@ -41,6 +49,25 @@ function ManagePurchaseOrder() {
               });
     }
 
+    const makePayment = async () =>{
+        const url = URLS.GENERATE_INVOICE + currentPo1.id;
+
+        axios.post(url)
+              .then(function (response) {
+                  if(response.status === 200){
+                    setCurrentPo1(null);
+                    displayToast({type : "success", msg : "Invoice generated successfully!"});
+                    fetchPos();
+                  }else{
+                    displayToast({type : "error", msg : "Oops! Something went wrong"});
+                  }
+              })
+              .catch(function (error) {
+                console.log(error);
+                displayToast({type : "error", msg : "Oops! Something went wrong"});
+              }); 
+    }
+
     const deletePoConfirmation = (b) =>{
         setCurrentPo(b);
         handleShow();
@@ -62,6 +89,11 @@ function ManagePurchaseOrder() {
                 console.log(error);
                 displayToast({type : "error", msg : "Oops! Something went wrong"});
               });
+    }
+
+    const generateInvoiceConfirmation = (item) =>{
+        setCurrentPo1(item);
+        handleShow1();
     }
 
     return (
@@ -101,7 +133,8 @@ function ManagePurchaseOrder() {
                             <td>{paymentDueDate}</td>
                             <td>{paid ? 'Paid' : "Unpaid"}</td>
                             <td>
-                                <Link to={`/edit-purchase-order/?id=${id}`}><Button variant="primary">Edit</Button>{' '}</Link>
+                                {/* <Link to={`/edit-purchase-order/?id=${id}`}><Button variant="primary">Edit</Button>{' '}</Link> */}
+                                <Button onClick={()=>generateInvoiceConfirmation(item)} variant="primary">Generate Invoice</Button>
                                 <Button onClick={()=>deletePoConfirmation(item)} variant="danger">Delete</Button>
                             </td>
                         </tr>);
@@ -121,6 +154,21 @@ function ManagePurchaseOrder() {
             </Button>
             <Button variant="danger" onClick={deletePurchaseOrder}>
                 Delete
+            </Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={show1} onHide={handleClose1}>
+            <Modal.Header closeButton>
+            <Modal.Title>Payment Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>You are about to generate invoice and make full payment. Are you sure you want to continue?</Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose1}>
+                No
+            </Button>
+            <Button variant="parimary" onClick={makePayment}>
+                Yes
             </Button>
             </Modal.Footer>
         </Modal>
