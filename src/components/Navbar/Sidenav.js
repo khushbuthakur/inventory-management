@@ -52,15 +52,14 @@ function Sidenav() {
             >
                 <SideNav.Toggle />
                 <SideNav.Nav defaultSelected="home">
-                    <NavItem eventKey="/">
+                    {/* <NavItem eventKey="/home">
                         <NavIcon>
                         <FontAwesomeIcon icon={faHome} className="side-nav-icons"/>
-                            {/* <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} /> */}
                         </NavIcon>
                         <NavText>
                             Home
                         </NavText>
-                    </NavItem>
+                    </NavItem> */}
                     <NavItem eventKey="manage-products">
                         <NavIcon>
                         <FontAwesomeIcon icon={faCoffee} className="side-nav-icons"/>
@@ -71,6 +70,7 @@ function Sidenav() {
                         </NavText>
                     </NavItem>
 
+                    {userData.designation.toUpperCase() === 'MANAGER' && (
                     <NavItem eventKey="manage-employees">
                         <NavIcon>
                         <FontAwesomeIcon icon={faUserTie} className="side-nav-icons"/>
@@ -80,6 +80,7 @@ function Sidenav() {
                             Employees
                         </NavText>
                     </NavItem>
+                    )}
 
                     <NavItem eventKey="manage-buyers">
                         <NavIcon>

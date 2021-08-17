@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, {useReducer, useState, useEffect} from 'react';
+import React, {useReducer, useState, useEffect, useContext} from 'react';
 import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
 import { URLS } from '../../routes';
 import displayToast from '../../utils/displayToast';
 import { validateInputField } from '../../utils/validations';
 import { useHistory, useLocation } from 'react-router';
+import { AuthContext } from '../../context/Auth';
 
 const initialState = {
     fullName: '',
@@ -86,6 +87,8 @@ function AddEmployee() {
     const [isUpdate, setIsUpdate] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const {userData} = useContext(AuthContext);
+
     useEffect(() => {
         let isActive = true;
         let isPageUpdate = false;
@@ -165,7 +168,7 @@ function AddEmployee() {
             validateInputField({field : dob, fieldName : "dob"}) &&
             validateInputField({field : designation, fieldName : "designation"}) &&
             validateInputField({field : password, fieldName : "password"})) {
-            const body = {fullName, username, salary, dob, rating, designation, id, password};
+            const body = {fullName, username, salary, dob, rating, designation, id, password, userId : userData.id};
             const url = isUpdate ? URLS.EDIT_EMPLOYEE : URLS.ADD_EMPLOYEE;
             
             if(isUpdate){

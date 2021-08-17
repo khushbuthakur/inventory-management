@@ -49,7 +49,7 @@ function RouteWrapper({
 
 function Nav() {
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, userData } = useContext(AuthContext);
 
   return (
     <BrowserRouter baseName="/">
@@ -64,15 +64,19 @@ function Nav() {
             <RouteWrapper path="/add-buyer" exact component={AddBuyer} />
             <RouteWrapper path="/edit-buyer/" exact component={AddBuyer} />
 
-            <RouteWrapper path="/manage-employees" exact component={ManageEmployee} />
-            <RouteWrapper path="/add-employee" exact component={AddEmployee} />
-            <RouteWrapper path="/edit-employee/" exact component={AddEmployee} />
-
+            {userData.designation.toUpperCase() === 'MANAGER' && (
+              <React.Fragment>
+                <RouteWrapper path="/manage-employees" exact component={ManageEmployee} />
+                <RouteWrapper path="/add-employee" exact component={AddEmployee} />
+                <RouteWrapper path="/edit-employee/" exact component={AddEmployee} />
+              </React.Fragment>
+            )}
+           
             <RouteWrapper path="/manage-purchase-order" exact component={ManagePurchaseOrder} />
             <RouteWrapper path="/add-purchase-order" exact component={AddPurchaseOrder} />
             <RouteWrapper path="/edit-purchase-order/" exact component={AddPurchaseOrder} />
-            {/* <RouteWrapper path="/home" exact component={Home} /> */}
-
+            
+            <RouteWrapper path="/home" exact component={Home} />
             <RouteWrapper path="/" exact component={Home} />
             
           </React.Fragment>
