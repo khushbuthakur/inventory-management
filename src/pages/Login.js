@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react'
+import React, {useReducer, useContext} from 'react'
 import { Button, Form, Row, Col } from 'react-bootstrap';
 import '../styles/Login.scss';
 import displayToast from '../utils/displayToast';
@@ -6,6 +6,7 @@ import { validateInputField } from '../utils/validations';
 import axios from 'axios';
 import { URLS } from '../routes';
 import { useHistory } from 'react-router';
+import { AuthContext } from '../context/Auth';
 
 const initialState = {
     userName: '',
@@ -16,13 +17,13 @@ const reducer = (state, action) => {
     switch (action.type) {
         case 'USER_NAME':
             return {
-                ...initialState,
+                ...state,
                 userName: action.userName
             };
 
         case 'USER_PASSWORD':
             return {
-                ...initialState,
+                ...state,
                 password: action.password
             };
 
@@ -34,6 +35,7 @@ const reducer = (state, action) => {
 };
 
 function Login() {
+    const { userData, setUserData, isLoggedIn } = useContext(AuthContext);
 
     const [state, dispatch] = useReducer(reducer, initialState);
     const history = useHistory();
@@ -46,9 +48,10 @@ function Login() {
     };
 
     const handlePasswordChange = (event) => {
+        
         dispatch({
             type: 'USER_PASSWORD',
-            userName: event.target.value
+            password: event.target.value
         });
     };
 
@@ -64,6 +67,8 @@ function Login() {
             axios.post(URLS.VERIFY_USER, body)
               .then(function (response) {
                 console.log(response);
+                debugger;
+                setUserData(response.data);
                 resetForm();
                 displayToast({type : "success", msg : "Login Successful!"});
 

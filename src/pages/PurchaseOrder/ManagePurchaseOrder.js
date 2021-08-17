@@ -32,8 +32,7 @@ function ManagePurchaseOrder() {
         const url = URLS.GET_ALL_PURCHASE_ORDERS;
         axios.get(url)
               .then(function (response) {
-                console.log(response);
-                debugger;
+                // console.log(response);
                 setPos(response.data);
               })
               .catch(function (error) {
@@ -91,8 +90,8 @@ function ManagePurchaseOrder() {
 
                 <tbody>
                     {pos.map((item, index) => {
-                        const {id, products, paymentDueDate, paid, invoice, buyer, totalAmount} = item;
-                        const {companyName} = buyer;
+                        const {id, products, paymentDueDate, paid, invoice, buyer = {}, totalAmount} = item;
+                        let {companyName = ""} = buyer;
 
                         return (<tr key={id}>
                             <td>{index+1}</td>

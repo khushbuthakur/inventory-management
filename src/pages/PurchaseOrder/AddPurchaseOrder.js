@@ -46,7 +46,10 @@ const reducer = (state, action) =>{
             return{
                 ...state,
                 selectedProducts : action.productList
-            }  
+            } 
+            
+        case 'UPDATE_ALL_FIELDS':
+            return action.state;  
 
         case 'RESET':
             return initialState;    
@@ -56,7 +59,14 @@ const reducer = (state, action) =>{
     }
 }
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 function AddPurchaseOrder() {
+
+    let query = useQuery();
+    const poId = query.get("id");
 
     const [productList, setProductList] = useState([]);
     const [currentProduct, setCurrentProduct] = useState(null);
@@ -69,6 +79,8 @@ function AddPurchaseOrder() {
     const [isLoading, setIsLoading] = useState(true);
 
     const history = useHistory();
+
+    const [isUpdate, setIsUpdate] = useState(false);
 
     const fetchProducts = async () => {
         const url = URLS.GET_ALL_PRODUCTS;
@@ -89,7 +101,11 @@ function AddPurchaseOrder() {
               .then(function (response) {
                 // console.log(response);
                 setBuyers(response.data);
-                setIsLoading(false);
+                if(isUpdate){
+                    fetchCurrentPo();
+                }else{
+                    setIsLoading(false);
+                }
               })
               .catch(function (error) {
                 console.log(error);
@@ -101,6 +117,7 @@ function AddPurchaseOrder() {
         let isActive = true;
 
         if(isActive){
+            setIsUpdate(!!poId);
             fetchProducts();
         }
 
@@ -109,6 +126,27 @@ function AddPurchaseOrder() {
         }
     }, []);
     
+    const fetchCurrentPo = async () => {  
+        const url  = `${URLS.GET_PURCHASE_ORDERS_DETAILS}/${poId}`;
+        debugger;
+        axios.get(url)
+            .then(function (response) {
+            const {status} = response;
+            
+                if(status === 200){
+                    dispatch({type: 'UPDATE_ALL_FIELDS', state: response.data});
+                }else{
+                    displayToast({type : "error", msg : "Oops! Something went wrong."});
+                    setIsLoading(false);
+                }
+            })
+            .catch(function (error) {
+                setIsLoading(false);
+                console.log(error);
+                displayToast({type : "error", msg : error.msg});
+            });
+    }
+
     const handleProductChangne = (e) =>{
         setCurrentProduct(e.target.value);
     }
@@ -136,13 +174,24 @@ function AddPurchaseOrder() {
 
     const handleQuantityChange = (e, product) =>{
         const quantity = e.target.value;
+        let isValid = false;
+
         const productList = selectedProducts.map(i => {
             if(i.id == product.id){
-                return {...i, selectedQuantity : quantity};
+                if(quantity > i.quantity){
+                    displayToast({type : "error", msg : "Quantity cannot be more than available quantity!"});
+                    return false;
+                }else{
+                    isValid = true;
+                    return {...i, selectedQuantity : quantity};
+                }
             }
             return i;
         });
-        dispatch({type: 'UPDATE_QUANTITY', productList});
+
+        if(isValid){
+            dispatch({type: 'UPDATE_QUANTITY', productList});
+        }
     }
 
     const handleBuyerChangne = (e) =>{
@@ -181,7 +230,7 @@ function AddPurchaseOrder() {
 
                         const body = {
                             buyer,
-                            paymentDate : date,
+                            paymentDueDate : date,
                             products : userProducts,
                             totalAmount : 0.0,
                             paid : false
@@ -200,7 +249,7 @@ function AddPurchaseOrder() {
 
     const submitPoAPi = async (body) =>{
         const url = URLS.ADD_PURCHASE_ORDERS;
-        console.log(body);
+        
         axios.post(url, body)
               .then(function (response) {
                 const {status} = response;
@@ -241,11 +290,10 @@ function AddPurchaseOrder() {
                         <Card>
                             <Card.Body>
                                 <Form onSubmit={addProduct}>
-                                
                             <Row>
                                 <Col lg={6}>
                                         <FloatingLabel controlId="floatingSelect" label="Seelct Buyer">
-                                                <Form.Select aria-label="Buyer List" onChange={handleBuyerChangne} value={buyerId}>
+                                                <Form.Select aria-label="Buyer List" onChange={handleBuyerChangne} defaultValue={buyerId}>
                                                 <option value="" selected disabled>Select a Buyer</option>
                                                     {buyers.map(b =>{
                                                         return <option key={b.id} value={b.id}>{b.companyName} - {b.ownerName}</option>
@@ -273,7 +321,7 @@ function AddPurchaseOrder() {
                                         </FloatingLabel>
                                     </Col>
                                     <Col lg={1}>
-                                        <Button variant="primary" type="submit">Add</Button>
+                                        <Button variant="primary" type="submit" disabled={isLoading}>Add</Button>
                                     </Col>
 
                                     
@@ -326,7 +374,7 @@ function AddPurchaseOrder() {
                 <Row>
                     <Col md={{span : 6, offset : 5}}>
                     <Form onSubmit={submitPo}>
-                        <Button variant="primary" className="center-align" type="submit" onclick={submitPo}>Save</Button>
+                        <Button variant="primary" disabled={isLoading} className="center-align" type="submit">Save</Button>
                     </Form>
                     </Col>
                 </Row> 

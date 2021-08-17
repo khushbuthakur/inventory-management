@@ -70,6 +70,7 @@ function Nav() {
 
         <RouteWrapper path="/manage-purchase-order" exact component={ManagePurchaseOrder} />
         <RouteWrapper path="/add-purchase-order" exact component={AddPurchaseOrder} />
+        <RouteWrapper path="/edit-purchase-order/" exact component={AddPurchaseOrder} />
 
         <Route exact path="/">
           <Redirect to="/" />

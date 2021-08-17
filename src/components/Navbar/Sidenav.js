@@ -1,13 +1,18 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import { useHistory, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../context/Auth';
 
 function Sidenav() {
     const history = useHistory();
     const location = useLocation();
+    const {isLoggedIn } = useContext(AuthContext);
 
-    return (
+    if(!isLoggedIn){
+        return null;
+    }else{
+     return (
         <React.Fragment>
             <SideNav
                 onSelect={(selected) => {
@@ -66,7 +71,7 @@ function Sidenav() {
             </SideNav>
             </React.Fragment>
             )
-       
+    }  
 }
 
 export default Sidenav;
