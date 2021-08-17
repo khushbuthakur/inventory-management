@@ -14,7 +14,6 @@ function Sidenav() {
     const {isLoggedIn, setUserData, userData } = useContext(AuthContext);
 
     const logoutUser = () => {
-        debugger;
         displayToast("Logged out successfully!", "success");
     
         setTimeout(() => {
@@ -43,6 +42,7 @@ function Sidenav() {
             </Container>
             </Navbar>
             <SideNav
+                className="side--nav"
                 onSelect={(selected) => {
                     const to = '/' + selected;
                     if (location.pathname !== to) {
