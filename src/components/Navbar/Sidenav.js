@@ -29,7 +29,7 @@ function Sidenav() {
         <React.Fragment>
         <Navbar bg="light" expand="lg">
             <Container>
-                <Navbar.Brand href="/">Inventory Management</Navbar.Brand>   
+                <Navbar.Brand href="/">!nventoria</Navbar.Brand>   
                 <Navbar.Collapse className="justify-content-end">
                     <Navbar.Text>
                         <FontAwesomeIcon icon={faUserTie} className="side-nav-icons"/>  {userData.fullName} - <b>{userData.designation}</b>

@@ -204,6 +204,7 @@ function AddPurchaseOrder() {
 
     const submitPo = (e) =>{
         e.preventDefault();
+     if(!isLoading){
         setIsLoading(true);
         
         if(validateInputField({field : buyerId, fieldName : "buyer name"}) && validateInputField({field : paymentDate, fieldName : "payment date"})){
@@ -245,6 +246,7 @@ function AddPurchaseOrder() {
         }else{
             setIsLoading(false);
         }
+     }
     }
 
     const submitPoAPi = async (body) =>{
