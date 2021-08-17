@@ -12,6 +12,8 @@ import AddBuyer from '../pages/Buyer/AddBuyer';
 import Profile from '../pages/Profile';
 import ManageEmployee from '../pages/Employee/ManageEmployee';
 import AddEmployee from '../pages/Employee/AddEmployee';
+import ManagePurchaseOrder from '../pages/PurchaseOrder/ManagePurchaseOrder';
+import AddPurchaseOrder from '../pages/PurchaseOrder/AddPurchaseOrder';
 
 function RouteWrapper({
   component: Component,
@@ -65,6 +67,10 @@ function Nav() {
         <RouteWrapper path="/manage-employees" exact component={ManageEmployee} />
         <RouteWrapper path="/add-employee" exact component={AddEmployee} />
         <RouteWrapper path="/edit-employee/" exact component={AddEmployee} />
+
+        <RouteWrapper path="/manage-purchase-order" exact component={ManagePurchaseOrder} />
+        <RouteWrapper path="/add-purchase-order" exact component={AddPurchaseOrder} />
+
         <Route exact path="/">
           <Redirect to="/" />
         </Route>

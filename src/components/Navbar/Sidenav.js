@@ -53,6 +53,15 @@ function Sidenav() {
                             Buyers
                         </NavText>
                     </NavItem>
+
+                    <NavItem eventKey="manage-purchase-order">
+                        <NavIcon>
+                            <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                        </NavIcon>
+                        <NavText>
+                            Purchase Orders
+                        </NavText>
+                    </NavItem>
                 </SideNav.Nav>
             </SideNav>
             </React.Fragment>

@@ -17,4 +17,10 @@ export const URLS = {
     ADD_EMPLOYEE: '/api/employee/save',
     EDIT_EMPLOYEE: '/api/employee/update',
     DELETE_EMPLOYEE: '/api/employee/delete/',
+
+    GET_ALL_PURCHASE_ORDERS: '/api/purchaseOrder/getAll',
+    GET_PURCHASE_ORDERS_DETAILS: '/api/purchaseOrder/getPurchaseOrder',
+    ADD_PURCHASE_ORDERS: '/api/purchaseOrder/save',
+    EDIT_PURCHASE_ORDERS: '/api/purchaseOrder/update',
+    DELETE_PURCHASE_ORDER: '/api/purchaseOrder/delete/',
 }
