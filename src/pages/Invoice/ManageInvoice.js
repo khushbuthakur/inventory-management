@@ -5,6 +5,7 @@ import { Container, Row, Button, Col, Table, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { URLS } from '../../routes';
 import displayToast from '../../utils/displayToast';
+
 function ManageInvoice() {
     const [invoices, setInvoices] = useState([]);
 
@@ -46,8 +47,6 @@ function ManageInvoice() {
                         <th>Total Products</th>
                         <th>Total Price</th>
                         <th>Payment Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -71,4 +70,4 @@ function ManageInvoice() {
     )
 }
 
-export default ManageInvoice
+export default ManageInvoice;

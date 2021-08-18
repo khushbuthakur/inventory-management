@@ -59,6 +59,8 @@ const reducer = (state, action) =>{
     }
 }
 
+let isSubmitted = false;
+
 function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
@@ -117,6 +119,7 @@ function AddPurchaseOrder() {
         let isActive = true;
 
         if(isActive){
+            isSubmitted = false;
             setIsUpdate(!!poId);
             fetchProducts();
         }
@@ -128,7 +131,6 @@ function AddPurchaseOrder() {
     
     const fetchCurrentPo = async () => {  
         const url  = `${URLS.GET_PURCHASE_ORDERS_DETAILS}/${poId}`;
-        debugger;
         axios.get(url)
             .then(function (response) {
             const {status} = response;
@@ -203,8 +205,9 @@ function AddPurchaseOrder() {
     }
 
     const submitPo = (e) =>{
-        e.preventDefault();
-     if(!isLoading){
+    e.preventDefault();
+     if(!isSubmitted){
+        isSubmitted = true;
         setIsLoading(true);
         
         if(validateInputField({field : buyerId, fieldName : "buyer name"}) && validateInputField({field : paymentDate, fieldName : "payment date"})){
@@ -241,9 +244,11 @@ function AddPurchaseOrder() {
                     }
                 }
             }else{
+                isSubmitted = false;
                 displayToast({type : "error", msg : "Please select a product!"});
             }
         }else{
+            isSubmitted = false;
             setIsLoading(false);
         }
      }
