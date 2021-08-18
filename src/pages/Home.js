@@ -26,13 +26,13 @@ const DATA = [
     {
         id : 4,
         title : "Buyers",
-        count : 5,
+        count : 3,
         icon : faShoppingBasket
     },
     {
         id : 5,
         title : "Employees",
-        count : 4,
+        count : 3,
         icon : faUserTie
     },
     {
