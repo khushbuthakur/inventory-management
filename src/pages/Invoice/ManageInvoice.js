@@ -25,7 +25,6 @@ function ManageInvoice() {
         axios.get(url)
               .then(function (response) {
                 console.log(response);
-                debugger;
                 setInvoices(response.data);
               })
               .catch(function (error) {

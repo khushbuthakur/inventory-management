@@ -66,12 +66,18 @@ function Login() {
 
             axios.post(URLS.VERIFY_USER, body)
               .then(function (response) {
-                console.log(response);
-                debugger;
-                setUserData(response.data);
-                resetForm();
-                displayToast({type : "success", msg : "Login Successful!"});
+                // console.log(response);
+                const {status} = response;
 
+                if(status == 200){
+                    if(response.data && response.data.id){
+                        setUserData(response.data);
+                        resetForm();
+                        displayToast({type : "success", msg : "Login Successful!"});
+                    }else{
+                        displayToast({type : "error", msg : "Please enter valid credentials!"});
+                    }
+                }
                 // setTimeout(() => {
                 //     history.push("/manage-buyers");
                 //   }, 1000);

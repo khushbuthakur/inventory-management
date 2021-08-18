@@ -135,7 +135,7 @@ function AddProduct() {
             if(isUpdate){
                 body.id = id;
             };
-            
+            debugger;
             axios[isUpdate ? "put" : "post"](url, body)
               .then(function (response) {
                 const {status} = response;

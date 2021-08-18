@@ -20,7 +20,7 @@ const DATA = [
     {
         id : 3,
         title : "Products",
-        count : 15,
+        count : 5,
         icon : faCoffee
     },
     {

@@ -40,8 +40,11 @@ function ManagePurchaseOrder() {
         const url = URLS.GET_ALL_PURCHASE_ORDERS;
         axios.get(url)
               .then(function (response) {
-                // console.log(response);
-                setPos(response.data);
+                console.log(response);
+                const {status} = response;
+                if(status === 200){
+                    setPos(response.data);
+                }
               })
               .catch(function (error) {
                 console.log(error);
