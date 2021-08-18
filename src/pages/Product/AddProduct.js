@@ -168,7 +168,7 @@ function AddProduct() {
             <Container fluid="lg">
                 <Row className="container-main">
                     <Col>
-                        <h3 className="center-align">{isUpdate ? "Update" : "Add"} Buyer</h3>
+                        <h3 className="center-align">{isUpdate ? "Update" : "Add"} Product</h3>
                     </Col>
                 </Row>
                 <Row className="container-main">
