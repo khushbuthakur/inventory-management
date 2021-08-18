@@ -166,7 +166,6 @@ function AddPurchaseOrder() {
         }else{
             displayToast({type : "error", msg : "Please select a product!"});
         }
-
         setIsLoading(false);
     }
 
@@ -204,13 +203,14 @@ function AddPurchaseOrder() {
         dispatch({type: 'UPDATE_PAYMENT_DATE', paymentDate : date});
     }
 
-    const submitPo = (e) =>{
-    e.preventDefault();
+ const submitPo = () =>{
+    
      if(!isSubmitted){
         isSubmitted = true;
         setIsLoading(true);
         
-        if(validateInputField({field : buyerId, fieldName : "buyer name"}) && validateInputField({field : paymentDate, fieldName : "payment date"})){
+        if(validateInputField({field : buyerId, fieldName : "buyer name"}) 
+            && validateInputField({field : paymentDate, fieldName : "payment date"})){
             if(selectedProducts.length > 0){
                 let isValid = true;
                 for(let i = 0; i < selectedProducts.length; i++){
@@ -220,6 +220,7 @@ function AddPurchaseOrder() {
                         displayToast({type : "error", msg : "Please select a quantity for each product!"});
                         return false;
                     }
+                }
                     const date = dayjs(paymentDate).format('MM-DD-YYYY');
 
                     if(isValid){
@@ -242,18 +243,18 @@ function AddPurchaseOrder() {
 
                         submitPoAPi(body);
                     }
+            }else{
+                    isSubmitted = false;
+                    setIsLoading(false);
+                    displayToast({type : "error", msg : "Please select a product!"});
                 }
             }else{
                 isSubmitted = false;
-                displayToast({type : "error", msg : "Please select a product!"});
+                setIsLoading(false);   
             }
-        }else{
-            isSubmitted = false;
-            setIsLoading(false);
         }
      }
-    }
-
+    
     const submitPoAPi = async (body) =>{
         const url = URLS.ADD_PURCHASE_ORDERS;
         
@@ -283,6 +284,15 @@ function AddPurchaseOrder() {
         dispatch({type: 'RESET'});
     }
 
+    let totalPrice = 0, totalAvlQty = 0, totalQty = 0, totalAmount = 0;
+
+    selectedProducts.forEach(i => {
+        // totalPrice += i.price;
+        // totalAvlQty += i.quantity;
+        totalQty += i.selectedQuantity ? parseInt(i.selectedQuantity) : 0;
+        totalPrice += i.selectedQuantity ? i.selectedQuantity * i.price : 0;
+    });
+
     return (
         <React.Fragment>
             <Container fluid="lg">
@@ -296,7 +306,7 @@ function AddPurchaseOrder() {
                     <Col md={{span : 10, offset : 1}}>
                         <Card>
                             <Card.Body>
-                                <Form onSubmit={addProduct}>
+                                {/* <Form onSubmit={addProduct}> */}
                             <Row>
                                 <Col lg={6}>
                                         <FloatingLabel controlId="floatingSelect" label="Seelct Buyer">
@@ -328,12 +338,11 @@ function AddPurchaseOrder() {
                                         </FloatingLabel>
                                     </Col>
                                     <Col lg={1}>
-                                        <Button variant="primary" type="submit" disabled={isLoading}>Add</Button>
-                                    </Col>
-
-                                    
+                                        <Button variant="primary" type="button" onClick={addProduct} disabled={isLoading}>Add</Button>
+                                </Col>
+                                       
                                 </Row>
-                                </Form>
+                                {/* </Form> */}
                             </Card.Body>
                         </Card>
                             <br/>
@@ -371,8 +380,22 @@ function AddPurchaseOrder() {
                                             <Button onClick={()=>deleteProduct(product)} variant="danger">Delete</Button>
                                         </td>
                                     </tr>);
-                                })}             
+                                })}      
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colSpan="2">Total</td>
+                                        <td>{totalPrice}</td>
+                                        {/* <td>{totalAvlQty}</td> */}
+                                        <td></td>
+                                        <td>
+                                            <Form.Group className="mb-3" controlId="formBasicQuantity">
+                                                    <Form.Control type="number" readOnly value={totalQty} placeholder="Enter Quantity" />
+                                                </Form.Group>
+                                        </td>
+                                        <td></td>
+                                    </tr>       
+                                </tfoot>
                         </Table>
 
                     </Card.Body>
@@ -380,9 +403,9 @@ function AddPurchaseOrder() {
                 <br/>  
                 <Row>
                     <Col md={{span : 6, offset : 5}}>
-                    <Form onSubmit={submitPo}>
-                        <Button variant="primary" disabled={isLoading} className="center-align" type="submit">Save</Button>
-                    </Form>
+                    {/* <Form onSubmit={submitPo}> */}
+                        <Button variant="primary" disabled={isLoading} className="center-align" type="button" onClick={submitPo}>Save</Button>
+                    {/* </Form> */}
                     </Col>
                 </Row> 
             </Col>

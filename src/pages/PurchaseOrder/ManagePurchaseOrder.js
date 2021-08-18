@@ -55,6 +55,7 @@ function ManagePurchaseOrder() {
         axios.post(url)
               .then(function (response) {
                   if(response.status === 200){
+                    handleClose1();
                     setCurrentPo1(null);
                     displayToast({type : "success", msg : "Invoice generated successfully!"});
                     fetchPos();
@@ -134,8 +135,12 @@ function ManagePurchaseOrder() {
                             <td>{paid ? 'Paid' : "Unpaid"}</td>
                             <td>
                                 {/* <Link to={`/edit-purchase-order/?id=${id}`}><Button variant="primary">Edit</Button>{' '}</Link> */}
-                                <Button onClick={()=>generateInvoiceConfirmation(item)} variant="primary">Generate Invoice</Button>
-                                <Button onClick={()=>deletePoConfirmation(item)} variant="danger">Delete</Button>
+                                {paid ? " - " : ( 
+                                    <React.Fragment>
+                                        <Button onClick={()=>generateInvoiceConfirmation(item)} variant="primary">Generate Invoice</Button>{" "}
+                                        <Button onClick={()=>deletePoConfirmation(item)} variant="danger">Delete</Button>
+                                    </React.Fragment>
+                                )}    
                             </td>
                         </tr>);
                     })}
@@ -164,10 +169,10 @@ function ManagePurchaseOrder() {
             </Modal.Header>
             <Modal.Body>You are about to generate invoice and make full payment. Are you sure you want to continue?</Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose1}>
+            <Button variant="danger" onClick={handleClose1}>
                 No
             </Button>
-            <Button variant="parimary" onClick={makePayment}>
+            <Button variant="info" onClick={makePayment}>
                 Yes
             </Button>
             </Modal.Footer>

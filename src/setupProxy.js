@@ -1,8 +1,8 @@
 var proxy = require('http-proxy-middleware');
 // const BASE_ROUTE = process.env.PRODUCTION == true ? 'http://synxe.us-east-2.elasticbeanstalk.com' : 'http://localhost:3000/';
 // const {BASE_ROUTE} = require('./routes/index');
-// const BASE_ROUTE = 'http://10.110.131.220:8080/';
-const BASE_ROUTE = 'http://10.110.134.87:8080/';
+const BASE_ROUTE = 'http://10.110.131.220:8080/';
+// const BASE_ROUTE = 'http://10.110.134.87:8080/';
 // const BASE_ROUTE = 'http://localhost:8080/';
 
 module.exports = app => {

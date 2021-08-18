@@ -24,7 +24,8 @@ function ManageInvoice() {
         const url = URLS.GET_ALL_INVOICE;
         axios.get(url)
               .then(function (response) {
-                // console.log(response);
+                console.log(response);
+                debugger;
                 setInvoices(response.data);
               })
               .catch(function (error) {
@@ -45,6 +46,7 @@ function ManageInvoice() {
                         <th>Sr. No.</th>
                         <th>Company Name</th>
                         <th>Total Products</th>
+                        <th>Total Quantity</th>
                         <th>Total Price</th>
                         <th>Payment Date</th>
                     </tr>
@@ -52,15 +54,18 @@ function ManageInvoice() {
 
                 <tbody>
                     {invoices.map((item, index) => {
-                        const {id, products, paymentDueDate, paid, invoice, buyer = {}, totalAmount} = item;
+                        const {id, purchaseOrder, paymentDate} = item;
+                        const {products, buyer = {}, totalAmount} = purchaseOrder;
                         let {companyName = ""} = buyer;
+                        let qty = products.reduce((acc, current) => acc + current.quantity, 0);
 
                         return (<tr key={id}>
                             <td>{index+1}</td>
                             <td>{companyName}</td>
                             <td>{products.length}</td>
+                            <td>{qty}</td>
                             <td>{totalAmount}</td>
-                            <td>{paymentDueDate}</td>
+                            <td>{paymentDate}</td>
                         </tr>);
                     })}
                 </tbody>
